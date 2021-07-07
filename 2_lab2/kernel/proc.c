@@ -277,6 +277,8 @@ fork(void)
 
   np->parent = p;
 
+  np->trace = p->trace;
+
   // copy saved user registers.
   *(np->trapframe) = *(p->trapframe);
 
@@ -692,4 +694,26 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+uint64 proc_num(void)
+{
+  static char *states[] = {
+  [UNUSED]    "unused",
+  [SLEEPING]  "sleep ",
+  [RUNNABLE]  "runble",
+  [RUNNING]   "run   ",
+  [ZOMBIE]    "zombie"
+  };
+  struct proc *p;
+  uint64 pn = 0;
+
+  for(p = proc; p < &proc[NPROC]; p++){
+    if(p->state == UNUSED)
+      continue;
+    if(p->state >= 0 && p->state < NELEM(states) && states[p->state])
+      pn++;
+  }
+
+  return pn;
 }
