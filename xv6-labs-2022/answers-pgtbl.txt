@@ -1,0 +1,3 @@
+pipe
+using shared memory for pipe system call, map this kernel memory to user memory.
+empty
