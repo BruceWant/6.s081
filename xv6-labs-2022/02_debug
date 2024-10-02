@@ -1,0 +1,3 @@
+(gdb) file user/hello.S
+(gdb) b user/hello.S:16
+(gdb) c

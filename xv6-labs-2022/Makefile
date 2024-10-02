@@ -82,6 +82,7 @@ QEMU = qemu-system-riscv64
 
 CC = $(TOOLPREFIX)gcc
 AS = $(TOOLPREFIX)gas
+ASS= $(TOOLPREFIX)as
 LD = $(TOOLPREFIX)ld
 OBJCOPY = $(TOOLPREFIX)objcopy
 OBJDUMP = $(TOOLPREFIX)objdump
@@ -188,8 +189,15 @@ UPROGS=\
 	$U/_grind\
 	$U/_wc\
 	$U/_zombie\
+	$U/_t\
 
-
+$U/hello: $U/hello.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/hello.S -o $U/hello.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/hello $U/hello.o
+	#$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/hello.out $U/hello.o
+	#$(OBJCOPY) -S -O binary $U/hello.out $U/hello
+	#$(OBJDUMP) -S $U/hello.o > $U/hello.asm
+	#$(ASS)  -ggdb -gdwarf-2 -o $U/hello.o $U/hello.S
 
 
 ifeq ($(LAB),$(filter $(LAB), lock))
@@ -259,9 +267,8 @@ ifeq ($(LAB),util)
 	UEXTRA += user/xargstest.sh
 endif
 
-
-fs.img: mkfs/mkfs README $(UEXTRA) $(UPROGS)
-	mkfs/mkfs fs.img README $(UEXTRA) $(UPROGS)
+fs.img: mkfs/mkfs README $(UEXTRA) $(UPROGS) $U/hello
+	mkfs/mkfs fs.img README $(UEXTRA) $(UPROGS) $U/hello
 
 -include kernel/*.d user/*.d
 
@@ -272,7 +279,8 @@ clean:
 	mkfs/mkfs .gdbinit \
         $U/usys.S \
 	$(UPROGS) \
-	ph barrier
+	ph barrier \
+	$U/hello $U/hello.o
 
 # try to generate a unique GDB port
 GDBPORT = $(shell expr `id -u` % 5000 + 25000)
@@ -281,7 +289,8 @@ QEMUGDB = $(shell if $(QEMU) -help | grep -q '^-gdb'; \
 	then echo "-gdb tcp::$(GDBPORT)"; \
 	else echo "-s -p $(GDBPORT)"; fi)
 ifndef CPUS
-CPUS := 3
+#CPUS := 3
+CPUS := 1
 endif
 ifeq ($(LAB),fs)
 CPUS := 1
