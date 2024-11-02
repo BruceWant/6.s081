@@ -192,7 +192,8 @@ UPROGS=\
 	$U/_t\
 
 UASM=\
-	$U/addi
+	$U/addi\
+	$U/slti
 
 $U/hello: $U/hello.S
 	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/hello.S -o $U/hello.o
@@ -205,6 +206,10 @@ $U/hello: $U/hello.S
 $U/addi: $U/addi.S
 	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/addi.S -o $U/addi.o
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/addi $U/addi.o
+
+$U/slti: $U/slti.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/slti.S -o $U/slti.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/slti $U/slti.o
 
 ifeq ($(LAB),$(filter $(LAB), lock))
 UPROGS += \
