@@ -9,9 +9,9 @@
 helloworld:      .asciz "hello world!\n"
 
 .text
-.global _start
+.global start
 
-_start:
+start:
         #addi  a0, x0, 1 # stdout
         li    a0, 1 # stdout
         la    a1, helloworld # address of string

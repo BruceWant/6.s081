@@ -191,6 +191,9 @@ UPROGS=\
 	$U/_zombie\
 	$U/_t\
 
+UASM=\
+	$U/addi
+
 $U/hello: $U/hello.S
 	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/hello.S -o $U/hello.o
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/hello $U/hello.o
@@ -199,6 +202,9 @@ $U/hello: $U/hello.S
 	#$(OBJDUMP) -S $U/hello.o > $U/hello.asm
 	#$(ASS)  -ggdb -gdwarf-2 -o $U/hello.o $U/hello.S
 
+$U/addi: $U/addi.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/addi.S -o $U/addi.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/addi $U/addi.o
 
 ifeq ($(LAB),$(filter $(LAB), lock))
 UPROGS += \
@@ -267,8 +273,8 @@ ifeq ($(LAB),util)
 	UEXTRA += user/xargstest.sh
 endif
 
-fs.img: mkfs/mkfs README $(UEXTRA) $(UPROGS) $U/hello
-	mkfs/mkfs fs.img README $(UEXTRA) $(UPROGS) $U/hello
+fs.img: mkfs/mkfs README $(UEXTRA) $(UPROGS) $U/hello $(UASM)
+	mkfs/mkfs fs.img README $(UEXTRA) $(UPROGS) $U/hello $(UASM)
 
 -include kernel/*.d user/*.d
 
@@ -280,7 +286,7 @@ clean:
         $U/usys.S \
 	$(UPROGS) \
 	ph barrier \
-	$U/hello $U/hello.o
+	$U/hello $U/hello.o $(UASM)
 
 # try to generate a unique GDB port
 GDBPORT = $(shell expr `id -u` % 5000 + 25000)
