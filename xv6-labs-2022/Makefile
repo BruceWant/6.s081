@@ -197,6 +197,10 @@ UASM=\
 	$U/sltiu\
 	$U/andi\
 	$U/ori\
+	$U/xori\
+	$U/slli\
+	$U/srli\
+	$U/srai\
 
 $U/hello: $U/hello.S
 	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/hello.S -o $U/hello.o
@@ -225,6 +229,22 @@ $U/andi: $U/andi.S
 $U/ori: $U/ori.S
 	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/ori.S -o $U/ori.o
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/ori $U/ori.o
+
+$U/xori: $U/xori.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/xori.S -o $U/xori.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/xori $U/xori.o
+
+$U/slli: $U/slli.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/slli.S -o $U/slli.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/slli $U/slli.o
+
+$U/srli: $U/srli.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/srli.S -o $U/srli.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/srli $U/srli.o
+
+$U/srai: $U/srai.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/srai.S -o $U/srai.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/srai $U/srai.o
 
 ifeq ($(LAB),$(filter $(LAB), lock))
 UPROGS += \
