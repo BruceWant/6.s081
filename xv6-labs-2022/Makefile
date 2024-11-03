@@ -193,7 +193,10 @@ UPROGS=\
 
 UASM=\
 	$U/addi\
-	$U/slti
+	$U/slti\
+	$U/sltiu\
+	$U/andi\
+	$U/ori\
 
 $U/hello: $U/hello.S
 	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/hello.S -o $U/hello.o
@@ -210,6 +213,18 @@ $U/addi: $U/addi.S
 $U/slti: $U/slti.S
 	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/slti.S -o $U/slti.o
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/slti $U/slti.o
+
+$U/sltiu: $U/sltiu.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/sltiu.S -o $U/sltiu.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/sltiu $U/sltiu.o
+
+$U/andi: $U/andi.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/andi.S -o $U/andi.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/andi $U/andi.o
+
+$U/ori: $U/ori.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/ori.S -o $U/ori.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/ori $U/ori.o
 
 ifeq ($(LAB),$(filter $(LAB), lock))
 UPROGS += \
