@@ -204,6 +204,7 @@ UASM=\
 	$U/lui\
 	$U/auipc\
 	$U/sub\
+	$U/jal\
 
 $U/hello: $U/hello.S
 	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/hello.S -o $U/hello.o
@@ -260,6 +261,10 @@ $U/auipc: $U/auipc.S
 $U/sub: $U/sub.S
 	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/sub.S -o $U/sub.o
 	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/sub $U/sub.o
+
+$U/jal: $U/jal.S
+	$(CC) $(CFLAGS) -march=rv64g -nostdinc -I. -Ikernel -c $U/jal.S -o $U/jal.o
+	$(LD) $(LDFLAGS) -N -e start -Ttext 0 -o $U/jal $U/jal.o
 
 ifeq ($(LAB),$(filter $(LAB), lock))
 UPROGS += \
